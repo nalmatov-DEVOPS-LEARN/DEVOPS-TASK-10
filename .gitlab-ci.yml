@@ -1,0 +1,13 @@
+stages:
+  - build
+  - test
+  - deploy
+
+build_job:
+  stage: build
+  image: docker:latest
+  script:
+    - echo "Building the application..."
+    - chmod +x app/ci/*
+    - app/ci/build.sh
+    - sleep 60
