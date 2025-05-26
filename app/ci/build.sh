@@ -1,2 +1,2 @@
-#!/bin/bash
+#!/bin/sh
 docker build -t task-6-image .
