@@ -6,6 +6,10 @@ stages:
 build_job:
   stage: build
   image: docker:latest
+  services:
+    - docker:dind # Docker-in-Docker сервис, чтобы команды docker работали
+  tags:
+    - docker # Если ваш runner требует этого тега для DinD
   script:
     - echo "Building the application..."
     - chmod +x app/ci/*
