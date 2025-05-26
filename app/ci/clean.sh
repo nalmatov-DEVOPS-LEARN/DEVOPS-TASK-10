@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 docker stop nurs_task_3_container
 
 docker rm nurs_task_3_container
