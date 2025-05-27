@@ -7,14 +7,21 @@
     - image_name: task-6-image
     - app_path: "/home/{{ ansible_user }}/app/"
   tasks:
-    - name: Disable broken nodesource repo (optional)
-      shell: |
-        mv /etc/apt/sources.list.d/nodesource.list /etc/apt/sources.list.d/nodesource.list.disabled || true
-      become: true
+    - name: Remove NodeSource APT repo if it exists
+      file:
+        path: /etc/apt/sources.list.d/nodesource.list
+        state: absent
 
-    - name: Update apt cache
+    - name: Remove NodeSource GPG key if it exists (legacy keyring)
+      file:
+        path: /etc/apt/trusted.gpg.d/nodesource.gpg
+        state: absent
+
+    - name: Clean APT cache
       apt:
-        update_cache: true
+        autoclean: yes
+        autoremove: yes
+        update_cache: yes
 
     - name: Installing Docker
       apt:
