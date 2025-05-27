@@ -12,7 +12,6 @@ build_and_test_job:
   script:
     - echo "Building and testing the application..."
     - app/ci/build.sh
-  sleep: 10
   only:
     - master
 
