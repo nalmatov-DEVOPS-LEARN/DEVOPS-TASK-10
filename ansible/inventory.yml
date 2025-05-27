@@ -6,4 +6,5 @@ all:
           ansible_host: "{{ ssh_host }}"
           ansible_user: "{{ ssh_user }}"
           ansible_port: "{{ ssh_port }}"
-          ansible_sudo_password: "{{ sudo_pass }}"
+          ansible_sudo_pass: "{{ sudo_pass }}"
+          ansible_ssh_private_key: "/home/{{ ssh_user }}/.ssh/id_rsa"
