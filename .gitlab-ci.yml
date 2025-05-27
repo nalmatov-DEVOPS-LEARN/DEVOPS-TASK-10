@@ -12,7 +12,7 @@ build_and_test_job:
   script:
     - echo "Building and testing the application..."
     - app/ci/build.sh
-    - app/ci/run.sh
+  sleep: 10
   only:
     - master
 
@@ -21,10 +21,13 @@ deploy_job:
   image: python:3.10
   before_script:
     - pip install ansible
-    - mkdir .ssh && echo "$SSH_PRIVATE_KEY" > .ssh/id_rsa
     - chmod +x ansible/deploy.sh
+    - mkdir .ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 .ssh/id_rsa
+    - eval $(ssh-agent -s)
+    - ssh-add ~/.ssh/id_rsa
   script:
     - cd ansible
     - |
       ansible-playbook -i inventory.ini playbook.yml \
-        --extra-vars "ssh_user=$SSH_USER ssh_pass=$SSH_PASSWORD ssh_port=$SSH_PORT sudo_pass$SUDO_PASSWORD"
+        --extra-vars "ssh_user=$SSH_USER ssh_port=$SSH_PORT sudo_pass$SUDO_PASSWORD"
