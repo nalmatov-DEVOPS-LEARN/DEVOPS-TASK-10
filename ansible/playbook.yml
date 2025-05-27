@@ -27,6 +27,7 @@
     - name: Build image from Dockerfile
       community.docker.docker_image:
         name: "{{ image_name }}"
+        source: build
         build:
           path: "{{ app_path }}"
 
