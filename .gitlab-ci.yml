@@ -1,15 +1,30 @@
 stages:
   - build
-  - test
   - deploy
 
-build_job:
+build_and_test_job:
   stage: build
   image: docker:latest
   services:
     - docker:dind
-  script:
-    - echo "Building the application..."
+  before_script:
     - chmod +x app/ci/*
+  script:
+    - echo "Building and testing the application..."
     - app/ci/build.sh
-    - sleep 60
+    - app/ci/run.sh
+  only:
+    - master
+
+deploy_job:
+  stage: deploy
+  image: python:3.10
+  before_script:
+    - pip install ansible
+    - mkdir .ssh && echo "$SSH_PRIVATE_KEY" > .ssh/id_rsa
+    - chmod +x ansible/deploy.sh
+  script:
+    - cd ansible
+    - |
+      ansible-playbook -i inventory.ini playbook.yml \
+        --extra-vars "ssh_user=$SSH_USER ssh_pass=$SSH_PASSWORD ssh_port=$SSH_PORT sudo_pass$SUDO_PASSWORD"

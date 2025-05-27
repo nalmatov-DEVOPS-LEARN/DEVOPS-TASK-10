@@ -1,0 +1,47 @@
+---
+- name: DEVOPS TASK 10
+  hosts: task10
+  become: yes
+  vars:
+    - NODEJS_VERSION: "16"
+    - container_name: task-6-container
+    - image_name: task-6-image
+    - app_path: "/home/{{ ansible_user }}/app/"
+  tasks:
+    - name: Installing Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: true
+
+    - name: Create application directory
+      file:
+        path: "{{ app_path }}"
+        state: directory
+
+    - name: Copying Dockerfile and source
+      copy:
+        src: ../app/
+        dest: "{{ app_path }}"
+        mode: "0755"
+
+    - name: Build image from Dockerfile
+      community.docker.docker_image:
+        name: { { image_name } }
+        build:
+          path: "{{ app_path }}"
+
+    - name: Stop old container if existing
+      docker_container:
+        name: "{{ container_name }}"
+        state: absent
+        force_kill: true
+
+    - name: Run container
+      docker_container:
+        name: "{{ container_name }}"
+        image: { { image_name } }
+        ports:
+          - "8080:8080"
+        state: started
+        restart_policy: always
