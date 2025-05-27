@@ -1,0 +1,9 @@
+all:
+  children:
+    task10:
+      hosts:
+        server1:
+          ansible_host: "{{ ssh_host }}"
+          ansible_user: "{{ ssh_user }}"
+          ansible_port: "{{ ssh_port }}"
+          ansible_sudo_password: "{{ sudo_pass }}"
