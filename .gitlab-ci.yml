@@ -23,10 +23,8 @@ deploy_job:
     - chmod +x ansible/deploy.sh
     - mkdir ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
-    - eval $(ssh-agent -s)
-    - ssh-add ~/.ssh/id_rsa
   script:
     - cd ansible
     - |
-      ansible-playbook -i inventory.ini playbook.yml \
-        --extra-vars "ssh_host=$SSH_HOST ssh_user=$SSH_USER ssh_port=$SSH_PORT sudo_pass=$SUDO_PASS"
+      ansible-playbook -i inventory.yml playbook.yml \
+        --extra-vars "ssh_host=$SSH_HOST ssh_user=$SSH_USER ssh_port=$SSH_PORT sudo_pass=$SUDO_PASSWORD"
